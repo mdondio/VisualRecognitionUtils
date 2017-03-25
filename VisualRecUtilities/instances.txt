@@ -1,0 +1,18 @@
+=================================================
+Istanze trainate
+=================================================
+
+Marco	Dondio	Sydney	0b915860705c066d9bd0166ac4850eefc8717438	yes	yes
+
+{
+  "classifier_id": "mushroom_classifier_1360141741",
+  "name": "mushroom_classifier",
+  "classes": [
+    {
+      "class": "mushroom"
+    }
+  ],
+  "owner": "b2cbfb30-4001-4b12-a143-7c5e3183bfca",
+  "created": "2017-03-25T23:35:24.192",
+  "status": "training"
+}
