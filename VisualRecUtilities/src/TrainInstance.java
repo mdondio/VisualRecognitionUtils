@@ -23,71 +23,61 @@ import com.it.ibm.watson.visualrecframework.WatsonBinaryClassifier;
  */
 public class TrainInstance {
 
-	public static final int STOP_TRAINING = 300; // num of pos OR neg elems (total size = x2)
 	public static final int CLASSIFYMAXIMAGES = 20; // max number of images per
 
-	public static final String BASEFOLDER = "visualrecframework/dataset/";
-	public static final String label = "mushroom";
+	public static final String BASEFOLDER = "visualrecframework/trainingset/";
+	public static final String label = "watch";
+	public static final String datasetName = "/watch_training_1900";
+
 
 	public static void main(String[] args) throws IOException {
 
 //		 Sezione di training
 		 HashMap<Long, Boolean> trainingSet = loadSet(BASEFOLDER + label +
-		 "/training", STOP_TRAINING);
+				 datasetName);
 		
 		 // // Prepare positive class for training set
-		 byte[] positiveClassZip = buildZipStream(BASEFOLDER + label +
-		 "/training/positive/", new
-		 ArrayList<Long>(trainingSet.keySet()).subList(0, STOP_TRAINING));
+		 byte[] positiveClassZip = buildZipStream(BASEFOLDER + label + datasetName + "/positive/", 
+				 trainingSet, true);
 		
 		 // Prepare negative class for training set
-		 byte[] negativeClassZip = buildZipStream(BASEFOLDER + label +
-		 "/training/negative/", new
-		 ArrayList<Long>(trainingSet.keySet()).subList(STOP_TRAINING,
-		 trainingSet.size()));
+		 byte[] negativeClassZip = buildZipStream(BASEFOLDER + label + datasetName + "/negative/", trainingSet, false);
 		
 		 // Train my classifier
-		  new WatsonBinaryClassifier(ImageRecognitionConfig.api_key, label,
+		 new WatsonBinaryClassifier(ImageRecognitionConfig.api_key, label,
 		 positiveClassZip, negativeClassZip);
 	}
 
-	private static HashMap<Long, Boolean> loadSet(String path, int stop) {
+	private static HashMap<Long, Boolean> loadSet(String path) {
 
 		HashMap<Long, Boolean> set = new LinkedHashMap<Long, Boolean>();
 
 		// Load positive samples
-		int i = 0;
 		File dir = new File(path + "/positive");
 		for (File img : dir.listFiles()) {
 			long imageID = Long.parseUnsignedLong(img.getName().replaceAll(".jpg", ""));
 			set.put(imageID, true);
-
-			// System.out.println(i);
-			if ((++i) >= stop)
-				break;
 		}
 
 		// Load negative samples
-		i = 0;
 		dir = new File(path + "/negative");
 		for (File img : dir.listFiles()) {
 			long imageID = Long.parseUnsignedLong(img.getName().replaceAll(".jpg", ""));
 			set.put(imageID, false);
-
-			if ((++i) >= stop)
-				break;
 		}
 
 		return set;
 	}
 
-	private static byte[] buildZipStream(String path, List<Long> imageList) throws IOException {
+	private static byte[] buildZipStream(String path, HashMap<Long, Boolean> trainingSet, boolean targetClass) throws IOException {
 
 		// First, build a list containing all files indicated by this set
-
 		List<File> files = new ArrayList<File>();
 
-		for (long imageID : imageList) {
+		for (long imageID : trainingSet.keySet()) {
+			
+			if(trainingSet.get(imageID) == targetClass)
+			
 			files.add(new File(path + Long.toUnsignedString(imageID) + ".jpg"));
 			System.out.println(path + Long.toUnsignedString(imageID) + ".jpg");
 		}
