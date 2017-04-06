@@ -23,11 +23,9 @@ import com.it.ibm.watson.visualrecframework.WatsonBinaryClassifier;
  */
 public class TrainInstance {
 
-	public static final int CLASSIFYMAXIMAGES = 20; // max number of images per
-
 	public static final String BASEFOLDER = "visualrecframework/trainingset/";
-	public static final String label = "watch";
-	public static final String datasetName = "/watch_training_1900";
+	public static final String label = "helicopter";
+	public static final String datasetName = "/helicopter_training_1900";
 
 
 	public static void main(String[] args) throws IOException {
